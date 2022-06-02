@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import axios from "axios";
 import moment from "moment";
 import writeXlsxFile from "write-excel-file/node";
+import XLSX from "xlsx";
 
 const app = express();
 
@@ -59,25 +60,13 @@ app.post("/generate", (req, res) => {
     .then((data) => {
       axios({
         method: "get",
-        url: "http://device.telematic.mflora.com.my/api/devices?all=true",
+        url: "http://device.telematic.mflora.com.my/api/devices",
         headers: { Cookie: data.headers["set-cookie"][0] },
       })
         .then(async (data) => {
           const obj = data.data;
-          const schema = [{ column: "Name", type: String, value: obj.name }];
-          const filen =
-            moment().format("YY") +
-            moment().format("MM") +
-            moment().format("DD") +
-            moment().format("HH") +
-            moment().format("mm") +
-            moment().format("ss") +
-            ".xlsx";
-          await writeXlsxFile(obj, {
-            schema,
-            filePath: filen,
-          });
-          req.memory = filen;
+
+          res.redirect("/");
         })
         .catch((err) => console.log(err));
     })
