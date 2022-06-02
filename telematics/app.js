@@ -51,25 +51,27 @@ app.post("/generate", (req, res) => {
     .then((data) => {
       axios({
         method: "get",
-        url: "http://device.telematic.mflora.com.my/api/devices?all=true",
+        url: "http://device.telematic.mflora.com.my/api/devices",
         headers: { Cookie: data.headers["set-cookie"][0] },
       })
         .then(async (data) => {
           const obj = data.data;
-          const schema = [{ column: "Name", type: String, value: obj.name }];
-          const filen =
-            moment().format("YY") +
-            moment().format("MM") +
-            moment().format("DD") +
-            moment().format("HH") +
-            moment().format("mm") +
-            moment().format("ss") +
-            ".xlsx";
-          await writeXlsxFile(obj, {
-            schema,
-            filePath: filen,
-          });
-          req.memory = filen;
+          const worksheet = XLSX.utils.json_to_sheet(obj);
+          const workbook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+          XLSX.writeFile(
+            workbook,
+            "Generated_PDF/" +
+              moment().format("YY") +
+              moment().format("MM") +
+              moment().format("DD") +
+              moment().format("HH") +
+              moment().format("mm") +
+              moment().format("ss") +
+              "_telematic-data.xlsx"
+          );
+          res.redirect("/");
         })
         .catch((err) => console.log(err));
     })
