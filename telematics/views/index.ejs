@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telematics</title>
+    <style>
+        table {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            margin: auto;
+        }
+
+        tr,
+        td {
+            background-color: rgb(163, 163, 163);
+            width: fit-content;
+            border: 1px white solid;
+        }
+
+        .centered {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body style="text-align: center ;">
+    <h3>Check by IMEI</h3>
+    <form action="/" method="post">
+        <input type="text" name="imei" value="" placeholder="Enter IMEI (last 5 digit)" />
+        <button type="submit">Go!</button>
+    </form>
+    <% if(data.length>0){ %>
+        <% data.map(data=>{ %>
+            <h3>
+                Current Name : <%= data.name %>
+            </h3>
+            <div class="centered">
+                <table style="text-align: left ;">
+                    <tr>
+                        <td>ID</td>
+                        <td>
+                            <%= data.id %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Group ID</td>
+                        <td>
+                            <%= data.groupId %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Name</td>
+                        <td>
+                            <%= data.name %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Unique ID</td>
+                        <td>
+                            <%= data.uniqueId %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td>
+                            <%= data.status %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ID</td>
+                        <td>
+                            <%= data.id %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Last Update</td>
+                        <td>
+                            <%= data.lastUpdate ? moment(data.lastUpdate).format('MMMM Do YYYY, h:mm:ss a') : "" %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Phone</td>
+                        <td>
+                            <%= data.phone %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td>
+                            <%= data.model %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Contact</td>
+                        <td>
+                            <%= data.contact %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <td>
+                            <%= data.category %>
+                        </td>
+                    </tr>
+                </table>
+                <hr>
+            </div>
+            <div>
+            </div>
+            <% }) %>
+                <% }else{ %>
+                    <hr>
+                    <% } %>
+                        <form action="/generate" method="post">
+                            <button type="submit">Export Excel</button>
+                        </form>
+                        </div>
+</body>
+
+</html>
