@@ -52,7 +52,7 @@ app.post("/", async (req, res) => {
 });
 
 app.post("/generate/:url", (req, res) => {
-  if (url === "all") {
+  if (req.params.url === "all") {
     axios({
       method: "get",
       url: "http://device.telematic.mflora.com.my/api/session?token=XKi6rzwPzJvjtkHctiiyeKlSdRl9PNPi",
@@ -86,7 +86,7 @@ app.post("/generate/:url", (req, res) => {
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
-  } else if (url === "loc") {
+  } else if (req.params.url === "loc") {
     axios({
       method: "get",
       url: "http://device.telematic.mflora.com.my/api/session?token=XKi6rzwPzJvjtkHctiiyeKlSdRl9PNPi",
@@ -95,7 +95,7 @@ app.post("/generate/:url", (req, res) => {
       .then((data) => {
         axios({
           method: "get",
-          url: "http://device.telematic.mflora.com.my/api/devices",
+          url: "http://device.telematic.mflora.com.my/api/positions",
           headers: { Cookie: data.headers["set-cookie"][0] },
         })
           .then(async (data) => {
