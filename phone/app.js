@@ -166,7 +166,7 @@ app.post("/rangedata", async (req, res) => {
 
 app.listen(80);
 
-// const obj = core;
+// const obj = core ;
 // const worksheet = XLSX.utils.json_to_sheet(obj);
 // const workbook = XLSX.utils.book_new();
 // XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
