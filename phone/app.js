@@ -4,6 +4,7 @@ import axios from "axios";
 import moment from "moment";
 import writeXlsxFile from "write-excel-file/node";
 import XLSX from "xlsx";
+import ws from "websocket";
 
 const app = express();
 
@@ -66,6 +67,7 @@ app.post("/generate/:url", (req, res) => {
         })
           .then(async (data) => {
             const obj = data.data;
+            console.log(typeof data.data);
             const worksheet = XLSX.utils.json_to_sheet(obj);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
@@ -123,4 +125,61 @@ app.post("/generate/:url", (req, res) => {
   }
 });
 
+app.post("/rangedata", async (req, res) => {
+  axios({
+    method: "get",
+    url: "http://device.telematic.mflora.com.my/api/session?token=XKi6rzwPzJvjtkHctiiyeKlSdRl9PNPi",
+    withCredentials: true,
+  }).then((data) => {
+    axios({
+      method: "get",
+      url: "http://device.telematic.mflora.com.my/api/devices",
+      headers: { Cookie: data.headers["set-cookie"][0] },
+    }).then((data) => {
+      const core = data.data.filter((result) => {
+        return (
+          result.lastUpdate !== null ||
+          moment().diff(moment(result.lastUpdate), "days") < 31
+        );
+      });
+
+      const obj = core;
+      const worksheet = XLSX.utils.json_to_sheet(obj);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+      XLSX.writeFile(
+        workbook,
+        "Generated_PDF/" +
+          moment().format("YY") +
+          moment().format("MM") +
+          moment().format("DD") +
+          moment().format("HH") +
+          moment().format("mm") +
+          moment().format("ss") +
+          "_telematic-data-30hari-active.xlsx"
+      );
+      res.redirect("/");
+    });
+  });
+});
+
 app.listen(80);
+
+// const obj = core;
+// const worksheet = XLSX.utils.json_to_sheet(obj);
+// const workbook = XLSX.utils.book_new();
+// XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+
+// XLSX.writeFile(
+//   workbook,
+//   "Generated_PDF/" +
+//     moment().format("YY") +
+//     moment().format("MM") +
+//     moment().format("DD") +
+//     moment().format("HH") +
+//     moment().format("mm") +
+//     moment().format("ss") +
+//     "_telematic-data-30hari-active.xlsx"
+// );
+// res.redirect("/");
